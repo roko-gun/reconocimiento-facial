@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f2f5;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 12px;
+            word-break: break-all;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Prueba de Login</h2>
+        <input type="text" id="email" placeholder="Email" value="admin@sistema.com">
+        <input type="password" id="password" placeholder="Contraseña" value="admin123">
+        <button onclick="login()">Iniciar Sesión</button>
+        <div id="resultado" class="result"></div>
+    </div>
+
+    <script>
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultado = document.getElementById('resultado');
+            
+            resultado.innerHTML = 'Conectando al servidor...';
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultado.innerHTML = `
+                        <div class="success">
+                            ✅ Login exitoso!<br>
+                            Token: ${data.token.substring(0, 50)}...<br>
+                            Usuario: ${data.usuario.nombre}<br>
+                            Email: ${data.usuario.email}
+                        </div>
+                    `;
+                    // Guardar token
+                    localStorage.setItem('token', data.token);
+                    console.log('Token guardado:', data.token);
+                } else {
+                    resultado.innerHTML = `<div class="error">❌ Error: ${data.message}</div>`;
+                }
+                
+            } catch (error) {
+                resultado.innerHTML = `<div class="error">
+                    ❌ Error de conexión:<br>
+                    ${error.message}<br><br>
+                    ¿El servidor está corriendo?<br>
+                    Verifica que backend esté ejecutándose en http://localhost:3000
+                </div>`;
+                console.error('Error:', error);
+            }
+        }
+        
+        // Probar conexión al servidor al cargar
+        async function testConnection() {
+            try {
+                const response = await fetch('http://localhost:3000/api/test');
+                const data = await response.json();
+                console.log('Servidor conectado:', data);
+                document.getElementById('resultado').innerHTML = '✅ Servidor conectado. Listo para login.';
+            } catch (error) {
+                document.getElementById('resultado').innerHTML = '❌ Servidor NO conectado. Asegúrate de ejecutar "node server.js" en la carpeta backend';
+            }
+        }
+        
+        testConnection();
+    </script>
+</body>
+</html>

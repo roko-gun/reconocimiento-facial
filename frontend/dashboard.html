@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistema de Reconocimiento Facial</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+        .welcome-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-icon {
+            font-size: 40px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .camera-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-top: 30px;
+        }
+        #video {
+            width: 100%;
+            max-width: 640px;
+            border-radius: 10px;
+            border: 3px solid #667eea;
+            margin: 0 auto;
+            display: block;
+        }
+        .btn-reconocer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+        .btn-reconocer:hover {
+            transform: translateY(-2px);
+            color: white;
+        }
+        .reconocimiento-info {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        .btn-success, .btn-warning {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-camera-reels"></i> FaceTrack
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="dashboard.html">
+                            <i class="bi bi-house-door"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="registro-personal.html">
+                            <i class="bi bi-person-plus"></i> Registrar Personal
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="consulta.html">
+                            <i class="bi bi-search"></i> Consultas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="logout">
+                            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Bienvenida -->
+        <div class="welcome-card">
+            <h2><i class="bi bi-person-circle"></i> <span id="userName">Usuario</span></h2>
+            <p class="mb-0">Bienvenido al sistema de control de acceso por reconocimiento facial</p>
+        </div>
+
+        <!-- Estadisticas -->
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <div class="stat-card text-center" onclick="window.location.href='consulta.html'">
+                    <div class="stat-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="stat-number" id="totalPersonal">0</div>
+                    <div class="stat-label">Personal Registrado</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card text-center" onclick="window.location.href='consulta.html'">
+                    <div class="stat-icon">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                    </div>
+                    <div class="stat-number" id="ingresosHoy">0</div>
+                    <div class="stat-label">Ingresos Hoy</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card text-center" onclick="window.location.href='consulta.html'">
+                    <div class="stat-icon">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </div>
+                    <div class="stat-number" id="salidasHoy">0</div>
+                    <div class="stat-label">Salidas Hoy</div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card text-center" onclick="window.location.href='consulta.html'">
+                    <div class="stat-icon">
+                        <i class="bi bi-person-check"></i>
+                    </div>
+                    <div class="stat-number" id="personalDentro">0</div>
+                    <div class="stat-label">Personal Dentro</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seccion de Reconocimiento Facial -->
+        <div class="camera-section">
+            <h4 class="mb-3"><i class="bi bi-camera-video"></i> Reconocimiento Facial en Tiempo Real</h4>
+            <div class="text-center">
+                <video id="video" autoplay playsinline></video>
+                <canvas id="canvas" style="display: none;"></canvas>
+
+                <div class="d-flex justify-content-center gap-3">
+                    <button id="iniciarCamara" class="btn btn-reconocer">
+                        <i class="bi bi-camera"></i> Iniciar Cámara
+                    </button>
+                    <button id="reconocerRostro" class="btn btn-reconocer" disabled>
+                        <i class="bi bi-scan"></i> Reconocer Rostro
+                    </button>
+                </div>
+
+                <!-- info del reconocimiento -->
+                <div id="infoReconocimiento" class="reconocimiento-info" style="display: none;">
+                    <h5 id="personaNombre"></h5>
+                    <p id="personaDetalles"></p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <button id="registrarIngreso" class="btn btn-success">
+                            <i class="bi bi-box-arrow-in-right"></i> Registrar Ingreso
+                        </button>
+                        <button id="registrarSalida" class="btn btn-warning">
+                            <i class="bi bi-box-arrow-right"></i> Registrar Salida
+                        </button>
+                    </div>
+                </div>
+
+                <div id="mensajeReconocimiento" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal del Chatbot -->
+    <div class="modal fade" id="chatbotModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Asistente Virtual</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="chatMessages" style="height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; margin-bottom: 10px;"></div>
+                    <div class="input-group">
+                        <input type="text" id="chatInput" class="form-control" placeholder="Escribe tu pregunta">
+                        <button class="btn btn-primary" id="sendChat">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Boton flotante del chatbot -->
+    <button class="btn btn-primary position-fixed bottom-0 end-0 m-4 rounded-circle" style="width: 60px; height: 60px;" data-bs-toggle="modal" data-bs-target="#chatbotModal">
+        <i class="bi bi-chat-dots" style="font-size: 24px;"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/chatbot.js"></script>
+</body>
+</html>

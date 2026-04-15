@@ -1,0 +1,32 @@
+# Dependencias
+node_modules/
+venv/
+__pycache__/
+*.pyc
+
+# Archivos de entorno
+.env
+.env.local
+
+# Base de datos
+*.sqlite
+*.db
+
+# Modelos entrenados (opcional, si quieres subirlos comenta estas líneas)
+*.yml
+*.pickle
+
+# Archivos temporales
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Carpetas de uploads (opcional, si quieres subir las fotos comenta esta línea)
+backend/uploads/
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.user
